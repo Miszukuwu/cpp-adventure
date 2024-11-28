@@ -5,18 +5,43 @@
 
 using namespace std;
 
-const int MAPROWS = 15;
-const int MAPCOLUMNS = 35;
-char map[MAPROWS][MAPCOLUMNS];
+const int SCREEN_HEIGHT = 15;
+const int SCREEN_WIDTH = 35;
+char renderBuffer[SCREEN_HEIGHT][SCREEN_WIDTH];
+const int MAP_WIDTH = 500, MAP_HEIGHT = 500;
+char map[MAP_HEIGHT][MAP_WIDTH];
+
+int playerX = MAP_WIDTH/2;
+int playerY = MAP_HEIGHT/2;
 
 void renderMap() {
+
+    // Render tiles from map to renderBuffer
+    for (int i = playerY-SCREEN_HEIGHT; i < playerY+SCREEN_HEIGHT; i++) {
+        for (int j = playerX-SCREEN_WIDTH; j < playerX+SCREEN_WIDTH; j++){
+            renderBuffer[i-playerY+SCREEN_HEIGHT][j-playerX+SCREEN_WIDTH] = map[i][j];
+        }
+    }
+    // Render Boundaries and set tiles to ' '
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
+        for (int j = 0; j < SCREEN_WIDTH; j++) {
+            if (i == 0 || i == SCREEN_HEIGHT-1) {
+                renderBuffer[i][j] = 196; // Left Right boundaries: '│'
+            } else if(j == 0 || j == SCREEN_WIDTH-1) {
+                renderBuffer[i][j] = 179; // Top Bottom boundaries: '─'
+            }
+        }
+    }
+
+    cout<<"Player X: "<<playerX<<endl;
+    cout<<"Player Y: "<<playerY<<endl;
     cout<<"Press ESC to exit"<<endl;
     cout<<"Use W S A D or arrow keys to move"<<endl;
-    for (int i = 0; i < MAPROWS; i++)
+    for (int i = 0; i < SCREEN_HEIGHT; i++)
     {
-        for (int j = 0; j < MAPCOLUMNS; j++)
+        for (int j = 0; j < SCREEN_WIDTH; j++)
         {
-            cout<<map[i][j];
+            cout<<renderBuffer[i][j];
         }
         cout<<endl;
     }
@@ -37,64 +62,52 @@ char getUserInput() {
         Sleep(50);
     }
 }
-// void playerMove(char action) {
-//     if (action == 'w' || action == 38)
-//     {
-//         for (int i = 0; i < MAPROWS; i++)
-//         {
-//             for (int j = 0; j < MAPCOLUMNS; j++)
-//             {
-//                 if (i != 0 && i != MAPROWS-1 && j != 0 && j != MAPCOLUMNS-1)
-//                 {
-//                     map[i][j] = map[i+1][j];
-//                 }
-//             }        
-//         }
-//     }
-//     if (action == 's' || action == 40)
-//     {
-//         for (int i = 0; i < MAPROWS; i++)
-//         {
-//             for (int j = 0; j < MAPCOLUMNS; j++)
-//             {
-//                 map[i][j] = map[i-1][j];
-//             }        
-//         }
-//     }
-// }
+void playerMove(char action) {
+    switch (action)
+    {
+    case 'w':
+        playerY--;
+        break;
+    case 's':
+        playerY++;
+        break;
+    case 'a': 
+        playerX--;
+        break;
+    case 'd':
+        playerX++;
+        break;
+    default:
+        break;
+    }
+    map[playerY][playerX] = 219;
+}
+
+void initMap(){
+    for (int i = 0; i < MAP_HEIGHT; i++)
+    {
+        for (int j = 0; j < MAP_WIDTH; j++)
+        {
+            int randomTile = (rand() % 70 + 1);
+            switch (randomTile)
+            {
+            case 1:
+                map[i][j] = 'X';
+                break;
+
+            default:
+                map[i][j] = ' ';
+                break;
+            }
+        }
+    }
+    map[playerY][playerX] = 219;
+}
 
 int main() {
     srand(time(0));
+    initMap();
 
-    for (int i = 0; i < MAPROWS; i++)
-    {
-        for (int j = 0; j < MAPCOLUMNS; j++)
-        {
-            if (i == 0 || i == MAPROWS-1)
-            {
-                map[i][j] = 196; // Left Right boundaries: '│'
-            } else if(j == 0 || j == MAPCOLUMNS-1) {
-                map[i][j] = 179; // Top Bottom boundaries: '─'
-            } else {
-                map[i][j] = ' ';
-            }
-        }        
-    }
-
-    for (int i = 0; i < MAPROWS; i++)
-    {
-        for (int j = 0; j < MAPCOLUMNS; j++)
-        {
-            if(map[i][j] == ' ') {
-                if((rand() % 70 + 1) == 1) {
-                    map[i][j] = 'X';
-                }
-            }
-        }        
-    }
-
-    map[MAPROWS/2][MAPCOLUMNS/2] = 219; // place player in the middle
-    
     char action;
     while(action != '\e') {
         system("cls");

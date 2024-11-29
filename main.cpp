@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <cstdlib>
 #include <ctime>
+#include <string>
+#include "Player.h"
+#include "Enemy.h"
 
 using namespace std;
 
@@ -129,8 +132,11 @@ void initMap(){
 }
 
 int main() {
+    Enemy::setEnemyList("enemies.txt");
     srand(time(0));
     initMap();
+
+    Player player;
 
     char action;
     while(action != '\e') {
@@ -144,7 +150,9 @@ int main() {
             playerMove(action);
             Sleep(10);
         }
-        cout<<"Action: "<<action<<endl;
+        if  (action == 'F') {
+            player.initiateFight();
+        }
     }
 
     return 0;

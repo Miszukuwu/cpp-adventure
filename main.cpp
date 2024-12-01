@@ -53,6 +53,9 @@ void renderMap() {
         }
         cout<<line<<endl;
     }
+    cout<<"Punkty Zycia: "<<player.health<<"/"<<player.maxHealth<<endl;
+    cout<<"Obecny armor: "<<player.equipedArmor.name<<", Obecne punkty Pancerza: "<<player.armorRating<<endl;
+    cout<<"Obecna bron: "<<player.equipedWeapon.name<<" "<<player.equipedWeapon.minDamage<<" - "<<player.equipedWeapon.maxDamage<<" obrazen"<<endl;
 }
 char getUserInput() {
     while (true) {
@@ -74,6 +77,9 @@ char getUserInput() {
     // return input;
 }
 void generateShop(){
+    system("cls");
+    cout<<"Znalazles Sklep!"<<endl;
+    system("pause");
     int numberOfItems = Functions::randomInt(2,5);;
     Item items[numberOfItems];
     bool boughtItems[numberOfItems];

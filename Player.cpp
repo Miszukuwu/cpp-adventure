@@ -169,8 +169,15 @@ void Player::checkForLevelUp() {
     {
         xp -= xpToNextLevel;
         level++;
-        maxHealth += level * 3;
+        maxHealth += level * 5;
         cout<<"Zdobyles kolejny poziom ! Masz teraz "<<level<<" poziom"<<endl;
         health = maxHealth;
     }
+}
+
+void Player::rest() {
+    cout<<"Odpoczales odnawiajac swoje zycie"<<endl;
+    health = maxHealth;
+    system("pause");
+    system("cls");
 }

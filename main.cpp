@@ -45,6 +45,7 @@ void renderMap() {
 
     cout<<"Wcisnij ESC by wyjsc"<<endl;
     cout<<"Uzyj W S A D lub strzalek by sie ruszac"<<endl;
+    cout<<"Aby odnowic zycie kliknij 'r'"<<endl;
     for (int i = 0; i < SCREEN_HEIGHT; i++)
     {
         string line = "";
@@ -185,10 +186,9 @@ int main() {
         if (action == 'w' || action == 's' || action == 'a' || action == 'd' || action == 37 || action == 38 || action == 39 || action == 40)
         {
             playerMove(action);
-            Sleep(10);
-        }
-        if  (action == 'F') {
-            player.initiateFight();
+            Sleep(200);
+        } else if(action == 'r') {
+            player.rest();
         }
     }
 

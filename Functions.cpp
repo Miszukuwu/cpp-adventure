@@ -18,3 +18,11 @@ vector<string> Functions::explode(string const & s, char delim)
 
     return result;
 }
+int Functions::randomInt(int min, int max) {
+    static bool seeded = false;
+    if (!seeded) {
+        srand(time(0));
+        seeded = true;
+    }
+    return min + (rand() % (max - min + 1));
+}

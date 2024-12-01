@@ -2,29 +2,27 @@
 #include <fstream>
 #include <string>
 #include <list>
-#include "Enemy.h"
 #include "Functions.h"
+#include "Enemy.h"
 
 using namespace std;
 
-list<Enemy> Enemy::allEnemies;
-
-void Enemy::setEnemyList(string filePath) {
-    ifstream enemiesFile(filePath);
-    string line;
-
-    while (getline(enemiesFile, line)) {
-        Enemy enemy;
-        auto lineArray = Functions::explode(line, ';');
-        enemy.enemyName = lineArray[0];
-        enemy.level = stoi(lineArray[1]);
-        enemy.health = stoi(lineArray[2]);
-        enemy.mana = stoi(lineArray[3]);
-        enemy.armorRating = stoi(lineArray[4]);
-        allEnemies.push_front(enemy);
-    }
+Enemy::Enemy(string enemyName, int level, int minHealth, int maxHealth, int armorRating, Weapon equippedWeapon) {
+    this->enemyName = enemyName;
+    this->level = level;
+    this->health = Functions::randomInt(minHealth, maxHealth);
+    this->armorRating = armorRating;
+    this->equippedWeapon = equippedWeapon;
 }
 
-list<Enemy> Enemy::getEnemyList() {
-    return allEnemies;
+void Enemy::printEnemyInfo() {
+    int rowLength = ("------- " + enemyName + " -------").length();
+    cout<<"------- "<<enemyName<<" -------"<<endl;
+    cout<<health<<" zycie";
+    for (int i = 0; i < rowLength - (to_string(health) + " zycie" + to_string(armorRating) + " pancerz").length(); i++)
+    {
+        cout<<" ";
+    }
+    cout<<armorRating<<" pancerz"<<endl<<endl;
+
 }

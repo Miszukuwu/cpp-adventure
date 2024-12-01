@@ -7,15 +7,18 @@
 
 using namespace std;
 
-class Enemy {
+class ReadEnemy {
     public:
         string enemyName;
         int level;
-        int health;
+        int minHealth;
+        int maxHealth;
         int armorRating;
         Weapon equippedWeapon;
 
-        Enemy(string enemyName, int level, int minHealth, int maxHealth, int armorRating, Weapon weapon);
+        static void setEnemyList(string filePath);
+        static vector<ReadEnemy> getEnemyList();
 
-        void printEnemyInfo();
+    private:
+        static vector<ReadEnemy> allEnemies;
 };

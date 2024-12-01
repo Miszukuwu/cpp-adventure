@@ -6,20 +6,19 @@ using namespace std;
 class Item {
     public:
         string name;
-        int price;
-        int weight;
 };
 
 class Weapon : public Item{
     public:
         int minDamage;
         int maxDamage;
-};
 
-class Consumable : public Item{
-    public:
-        int healthRestoreValue;
-        int manaRestoreValue;
+        static void setWeaponsList(string filePath); 
+        static vector<Weapon> getWeaponsList();
+        static Weapon getWeaponByName(string name);
+
+    private:
+        static vector<Weapon> allWeapons;
 };
 
 class Armor : public Item{

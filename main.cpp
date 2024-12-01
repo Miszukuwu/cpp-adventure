@@ -5,6 +5,7 @@
 #include <string>
 #include "Player.h"
 #include "Enemy.h"
+#include "ReadEnemy.h"
 
 using namespace std;
 
@@ -132,7 +133,9 @@ void initMap(){
 }
 
 int main() {
-    Enemy::setEnemyList("enemies.txt");
+    Weapon::setWeaponsList("weapons.txt");
+    ReadEnemy::setEnemyList("enemies.txt");
+
     srand(time(0));
     initMap();
 

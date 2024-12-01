@@ -1,1 +1,4 @@
-Szczur;1;5;0;0
+Szczur;1;4;6;0;Piesci
+Nietoperz;1;6;8;0;Piesci
+Goblin;2;10;13;1;Zelazny miecz
+Wilk;2;8;11;0;Zelazny miecz

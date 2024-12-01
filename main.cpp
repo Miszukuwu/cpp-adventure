@@ -17,9 +17,13 @@ int playerY = MAP_HEIGHT/2;
 void renderMap() {
 
     // Render tiles from map to renderBuffer
-    for (int i = playerY-SCREEN_HEIGHT; i < playerY+SCREEN_HEIGHT; i++) {
-        for (int j = playerX-SCREEN_WIDTH; j < playerX+SCREEN_WIDTH; j++){
-            renderBuffer[i-playerY+SCREEN_HEIGHT][j-playerX+SCREEN_WIDTH] = map[i][j];
+    for (int i = playerY-SCREEN_HEIGHT/2; i < playerY+SCREEN_HEIGHT/2; i++) {
+        for (int j = playerX-SCREEN_WIDTH/2; j < playerX+SCREEN_WIDTH/2; j++){
+            if (i < 0 || i >= MAP_WIDTH || j < 0 || j >= MAP_HEIGHT) {
+                renderBuffer[i-playerY+SCREEN_HEIGHT/2][j-playerX+SCREEN_WIDTH/2] = ' ';
+            } else {
+                renderBuffer[i-playerY+SCREEN_HEIGHT/2][j-playerX+SCREEN_WIDTH/2] = map[i][j];
+            }
         }
     }
     // Render Boundaries and set tiles to ' '
@@ -39,11 +43,12 @@ void renderMap() {
     cout<<"Use W S A D or arrow keys to move"<<endl;
     for (int i = 0; i < SCREEN_HEIGHT; i++)
     {
+        string line = "";
         for (int j = 0; j < SCREEN_WIDTH; j++)
         {
-            cout<<renderBuffer[i][j];
+            line += renderBuffer[i][j];
         }
-        cout<<endl;
+        cout<<line<<endl;
     }
 }
 char getUserInput() {
@@ -61,20 +66,40 @@ char getUserInput() {
         // Add a small delay to avoid high CPU usage
         Sleep(50);
     }
+    // char input;
+    // cin>>input;
+    // return input;
 }
 void playerMove(char action) {
+    map[playerY][playerX] = ' ';
     switch (action)
     {
     case 'w':
+    case 38:
+        if (playerY-1 <= 0) {
+            break;
+        }
         playerY--;
         break;
     case 's':
+    case 40:
+        if (playerY+1 >= MAP_HEIGHT-1) {
+            break;
+        }
         playerY++;
         break;
-    case 'a': 
+    case 'a':
+    case 37:
+        if (playerX-1 <= 0) {
+            break;
+        }
         playerX--;
         break;
     case 'd':
+    case 39:
+        if (playerX+1 >= MAP_WIDTH) {
+            break;
+        }
         playerX++;
         break;
     default:
@@ -89,16 +114,15 @@ void initMap(){
         for (int j = 0; j < MAP_WIDTH; j++)
         {
             int randomTile = (rand() % 70 + 1);
-            switch (randomTile)
-            {
-            case 1:
+            if (i==0 || i==MAP_HEIGHT-1 || j==0 || j==MAP_WIDTH-1) {
                 map[i][j] = 'X';
-                break;
-
-            default:
-                map[i][j] = ' ';
-                break;
+                continue;
             }
+            if (randomTile == 1) {
+                map[i][j] = 'O';
+                continue;
+            }
+            map[i][j] = ' ';
         }
     }
     map[playerY][playerX] = 219;
@@ -113,13 +137,14 @@ int main() {
         system("cls");
         renderMap();
 
-        action = getUserInput();
+        action = tolower(getUserInput());
         // Check if player moves
         if (action == 'w' || action == 's' || action == 'a' || action == 'd' || action == 37 || action == 38 || action == 39 || action == 40)
         {
             playerMove(action);
+            Sleep(10);
         }
-        
+        cout<<"Action: "<<action<<endl;
     }
 
     return 0;

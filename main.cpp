@@ -18,6 +18,8 @@ char map[MAP_HEIGHT][MAP_WIDTH];
 int playerX = MAP_WIDTH/2;
 int playerY = MAP_HEIGHT/2;
 
+Player player;
+
 void renderMap() {
 
     // Render tiles from map to renderBuffer
@@ -74,10 +76,28 @@ char getUserInput() {
     // cin>>input;
     // return input;
 }
+void openShop(){
+    system("cls");
+    int numberOfItems = (rand()%2)+2;
+    Item items[numberOfItems];
+    int itemsPrice[numberOfItems];
+    for (int i = 0; i < numberOfItems; i++) {
+        switch ((rand()%1)+1)
+        {
+        case 0:
+        
+            break;
+        case 1:
+        
+            break;
+        default:
+            break;
+        }
+    }
+}
 void playerMove(char action) {
     map[playerY][playerX] = ' ';
-    switch (action)
-    {
+    switch (action) {
     case 'w':
     case 38:
         if (playerY-1 <= 0) {
@@ -101,7 +121,7 @@ void playerMove(char action) {
         break;
     case 'd':
     case 39:
-        if (playerX+1 >= MAP_WIDTH) {
+        if (playerX+1 >= MAP_WIDTH-1) {
             break;
         }
         playerX++;
@@ -109,9 +129,25 @@ void playerMove(char action) {
     default:
         break;
     }
+    switch (map[playerY][playerX]) {
+    case 'O':
+        int randomNumber = (rand()%3)+1;
+        switch (randomNumber) {
+        case 1:
+            openShop();
+            break;
+        case 2:
+            // Loot
+        case 3:
+        case 4:
+            // Enemy encounter
+        default:
+            break;
+        } 
+        break;
+    }
     map[playerY][playerX] = 219;
 }
-
 void initMap(){
     for (int i = 0; i < MAP_HEIGHT; i++)
     {
@@ -138,8 +174,6 @@ int main() {
 
     srand(time(0));
     initMap();
-
-    Player player;
 
     char action;
     while(action != '\e') {

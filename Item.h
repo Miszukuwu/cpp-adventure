@@ -6,6 +6,7 @@ using namespace std;
 class Item {
     public:
         string name;
+        int price;
 };
 
 class Weapon : public Item{
@@ -24,4 +25,11 @@ class Weapon : public Item{
 class Armor : public Item{
     public:
         int armorBonus;
+        static void setArmorsList(string filePath); 
+        static vector<Armor> getArmorsList();
+        static Armor getArmorByName(string name);
+
+    private:
+        static vector<Armor> allArmors;
+
 };

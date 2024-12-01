@@ -38,4 +38,5 @@ class Player
     void rest();
     void attack(vector<Enemy>& fightingEnemies);
     bool escape(vector<Enemy>& fightingEnemies);
+    void equipItem(Item item);
 };

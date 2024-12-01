@@ -189,3 +189,21 @@ void Player::rest() {
     system("pause");
     system("cls");
 }
+void Player::equipItem(Item item){
+    Weapon weapon;
+    Armor armor;
+    switch (item.type) {
+    case 'w':
+        weapon = Weapon::getWeaponByName(item.name);
+        cout<<"Wyekwipowano "<<item.name<<endl;
+        cout<<"Minimalne obrazenia: "<<weapon.minDamage<<endl;
+        cout<<"Maksymalne obrazenia: "<<weapon.maxDamage<<endl;
+        break;
+    case 'a':
+        armor = Armor::getArmorByName(item.name);
+        cout<<"Wyekwipowano "<<item.name<<endl;
+        cout<<"Dodatkowe punkty pancerzu: "<<armor.armorBonus<<endl;
+    default:
+        break;
+    }
+}

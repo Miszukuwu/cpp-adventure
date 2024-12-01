@@ -1,0 +1,3 @@
+clothes;1;10
+leather armor;4;30
+chain mail;10;50

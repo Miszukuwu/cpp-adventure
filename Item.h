@@ -7,6 +7,7 @@ class Item {
     public:
         string name;
         int price;
+        char type;
 };
 
 class Weapon : public Item{

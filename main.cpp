@@ -46,11 +46,9 @@ void renderMap() {
     cout<<"Wcisnij ESC by wyjsc"<<endl;
     cout<<"Uzyj W S A D lub strzalek by sie ruszac"<<endl;
     cout<<"Aby odnowic zycie kliknij 'r'"<<endl;
-    for (int i = 0; i < SCREEN_HEIGHT; i++)
-    {
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
         string line = "";
-        for (int j = 0; j < SCREEN_WIDTH; j++)
-        {
+        for (int j = 0; j < SCREEN_WIDTH; j++) {
             line += renderBuffer[i][j];
         }
         cout<<line<<endl;
@@ -75,24 +73,65 @@ char getUserInput() {
     // cin>>input;
     // return input;
 }
-void openShop(){
-    system("cls");
-    int numberOfItems = (rand()%2)+2;
+void generateShop(){
+    int numberOfItems = Functions::randomInt(2,5);;
     Item items[numberOfItems];
-    int itemsPrice[numberOfItems];
+    bool boughtItems[numberOfItems];
     for (int i = 0; i < numberOfItems; i++) {
-        switch ((rand()%1)+1)
-        {
+        boughtItems[i] = false;
+        Weapon weapon;
+        Armor armor;
+        switch ((rand()%1)+1) {
         case 0:
-        
+        weapon = Weapon::getWeaponsList()[Functions::randomInt(1, Weapon::getWeaponsList().size()-1)];
+        items[i] = weapon;
             break;
         case 1:
-        
+        armor = Armor::getArmorsList()[Functions::randomInt(0, Armor::getArmorsList().size()-1)];
+        items[i] = armor;
             break;
         default:
             break;
         }
     }
+    int action;
+    do{
+        system("cls");
+        for (int i = 0; i < numberOfItems; i++) {
+            if (boughtItems[i]) {
+                cout<<i+1<<". "<<items[i].name<<" - Zakupione"<<endl;
+            } else {
+                cout<<i+1<<". "<<items[i].name<<" - "<<items[i].price<<" sztuk zlota"<<endl;
+            }
+        }
+        cout<<numberOfItems+1<<". Wyjscie"<<endl;
+        cout<<"Obecna ilosc zlota: "<<player.gold<<endl;
+        do{
+            cin.clear();
+            cin>>action;
+            if (action > 0 && action < numberOfItems+1){
+                if (player.gold < items[action-1].price) {
+                    cout<<"Brak pieniedzy!"<<endl;
+                    continue;
+                }
+                if (boughtItems[action-1]) {
+                    cout<<"Juz kupiles ten przedmiot!"<<endl;
+                    continue;
+                }
+                player.equipItem(items[action-1]);  
+                boughtItems[action-1] = true;
+                player.gold -= items[action-1].price;
+                system("pause");
+                break;
+            } else if (action == numberOfItems+1){
+                return;
+            } else {
+                cout<<"Nie ma takiej opcji!"<<endl;
+            }
+        } while (action != numberOfItems+1);
+    } while (true);
+    
+    
 }
 void playerMove(char action) {
     map[playerY][playerX] = ' ';
@@ -133,13 +172,13 @@ void playerMove(char action) {
         int randomNumber = (rand()%3)+1;
         switch (randomNumber) {
         case 1:
-            openShop();
+            generateShop();
             break;
         case 2:
-            // Loot
         case 3:
         case 4:
             player.initiateFight();
+            break;
         default:
             break;
         } 
@@ -168,6 +207,7 @@ void initMap(){
 }
 
 int main() {
+    Armor::setArmorsList("armors.txt");
     Weapon::setWeaponsList("weapons.txt");
     ReadEnemy::setEnemyList("enemies.txt");
 
@@ -191,6 +231,5 @@ int main() {
             player.rest();
         }
     }
-
     return 0;
 }

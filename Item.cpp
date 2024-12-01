@@ -23,6 +23,7 @@ void Weapon::setWeaponsList(string filePath) {
         weapon.minDamage = stoi(lineArray[1]);
         weapon.maxDamage = stoi(lineArray[2]);
         weapon.price = stoi(lineArray[3]);
+        weapon.type = 'w';
         allWeapons.push_back(weapon);
     }
 }
@@ -53,6 +54,7 @@ void Armor::setArmorsList(string filePath) {
         armor.name = lineArray[0];
         armor.armorBonus = stoi(lineArray[1]);
         armor.price = stoi(lineArray[2]);
+        armor.type = 'a';
         allArmors.push_back(armor);
     }
 }

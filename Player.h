@@ -35,6 +35,7 @@ class Player
     char getUserAction();
     void initiateFight();
     void checkForLevelUp();
+    void rest();
     void attack(vector<Enemy>& fightingEnemies);
     bool escape(vector<Enemy>& fightingEnemies);
 };

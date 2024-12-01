@@ -114,7 +114,7 @@ void Player::initiateFight() {
     system("pause");
     system("cls");
 
-    while (!fightingEnemies.empty() && !haveEscaped) {
+    while (!fightingEnemies.empty() && !haveEscaped && health > 0) {
         printPlayerInfo();
         for (Enemy& enemy : fightingEnemies) {
             enemy.printEnemyInfo();
@@ -144,8 +144,13 @@ void Player::initiateFight() {
                 int damage = Functions::randomInt(enemy.equippedWeapon.minDamage, enemy.equippedWeapon.maxDamage);
                 health -= damage;
                 cout<<enemy.enemyName<<" zaatakowal cie zadajac "<<damage<<endl;
+                if (health <= 0)
+                {
+                    system("pause");
+                    break;
+                }
             }
-            if (!fightingEnemies.empty())
+            if (!fightingEnemies.empty() && health > 0)
             {
                 system("pause");
             }
@@ -156,9 +161,11 @@ void Player::initiateFight() {
     if (haveEscaped)
     {
         cout<<"Udalo ci sie uciec"<<endl;
-    } else {
+    } else if(health > 0) {
         cout<<"Wygrales walke ! Dostales "<<goldAcquired<<" zlota"<<endl;
         gold += goldAcquired;
+    } else {
+        cout<<"Zemdlales. Straciles cale zloto i doswiadczenie"<<endl;
     }
     system("pause");
 }
@@ -169,8 +176,15 @@ void Player::checkForLevelUp() {
     {
         xp -= xpToNextLevel;
         level++;
-        maxHealth += level * 3;
+        maxHealth += level * 5;
         cout<<"Zdobyles kolejny poziom ! Masz teraz "<<level<<" poziom"<<endl;
         health = maxHealth;
     }
+}
+
+void Player::rest() {
+    cout<<"Odpoczales odnawiajac swoje zycie"<<endl;
+    health = maxHealth;
+    system("pause");
+    system("cls");
 }

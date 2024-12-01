@@ -24,10 +24,11 @@ class Player
         level = 1;
         health = 20;
         maxHealth = 20;
-        armorRating = 10;
+        armorRating = 1;
         xp = 0;
         gold = 0;
         equipedWeapon = Weapon::getWeaponByName("Piesci");
+        equipedArmor = Armor::getArmorByName("Szata");
     }
 
     public:

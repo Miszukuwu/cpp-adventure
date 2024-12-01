@@ -51,7 +51,7 @@ void Player::attack(vector<Enemy>& fightingEnemies) {
     choice--;
 
     int damage = Functions::randomInt(equipedWeapon.minDamage, equipedWeapon.maxDamage);
-    fightingEnemies[choice].health -= damage;
+    fightingEnemies[choice].health -= (int)(damage * ((100 - (fightingEnemies[choice].armorRating - 10)) / 100));
     if (fightingEnemies[choice].health <= 0)
     {
         xp += fightingEnemies[choice].level * 10;
@@ -142,7 +142,7 @@ void Player::initiateFight() {
         {
             for (Enemy enemy : fightingEnemies) {
                 int damage = Functions::randomInt(enemy.equippedWeapon.minDamage, enemy.equippedWeapon.maxDamage);
-                health -= damage;
+                health -= (int)(damage * ((100 - (armorRating - 10)) / 100));
                 cout<<enemy.enemyName<<" zaatakowal cie zadajac "<<damage<<endl;
                 if (health <= 0)
                 {
@@ -166,6 +166,8 @@ void Player::initiateFight() {
         gold += goldAcquired;
     } else {
         cout<<"Zemdlales. Straciles cale zloto i doswiadczenie"<<endl;
+        gold = 0;
+        xp = 0;
         health = maxHealth;
     }
     system("pause");
@@ -189,6 +191,7 @@ void Player::rest() {
     system("pause");
     system("cls");
 }
+
 void Player::equipItem(Item item){
     Weapon weapon;
     Armor armor;
@@ -203,6 +206,7 @@ void Player::equipItem(Item item){
         armor = Armor::getArmorByName(item.name);
         cout<<"Wyekwipowano "<<item.name<<endl;
         cout<<"Dodatkowe punkty pancerzu: "<<armor.armorBonus<<endl;
+        armorRating = armor.armorBonus;
     default:
         break;
     }

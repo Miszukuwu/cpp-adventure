@@ -166,6 +166,7 @@ void Player::initiateFight() {
         gold += goldAcquired;
     } else {
         cout<<"Zemdlales. Straciles cale zloto i doswiadczenie"<<endl;
+        health = maxHealth;
     }
     system("pause");
 }

@@ -1,2 +1,2 @@
-Piesci;1;3
-Zelazny miecz;3;7
+Piesci;1;3;0
+Zelazny miecz;3;7;50

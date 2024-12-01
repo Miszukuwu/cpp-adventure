@@ -43,10 +43,8 @@ void renderMap() {
         }
     }
 
-    cout<<"Player X: "<<playerX<<endl;
-    cout<<"Player Y: "<<playerY<<endl;
-    cout<<"Press ESC to exit"<<endl;
-    cout<<"Use W S A D or arrow keys to move"<<endl;
+    cout<<"Wcisnij ESC by wyjsc"<<endl;
+    cout<<"Uzyj W S A D lub strzalek by sie ruszac"<<endl;
     for (int i = 0; i < SCREEN_HEIGHT; i++)
     {
         string line = "";
@@ -140,7 +138,7 @@ void playerMove(char action) {
             // Loot
         case 3:
         case 4:
-            // Enemy encounter
+            player.initiateFight();
         default:
             break;
         } 
@@ -171,6 +169,8 @@ void initMap(){
 int main() {
     Weapon::setWeaponsList("weapons.txt");
     ReadEnemy::setEnemyList("enemies.txt");
+
+    player = Player();
 
     srand(time(0));
     initMap();

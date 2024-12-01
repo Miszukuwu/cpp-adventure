@@ -98,12 +98,21 @@ void Player::initiateFight() {
         }
     }
 
+    if (possibleEnemies.empty())
+    {
+        possibleEnemies = ReadEnemy::getEnemyList();
+    }
+    
+
     for (int i = 0; i < Functions::randomInt(1,3); i++) {
         ReadEnemy randomEnemy = possibleEnemies.at(Functions::randomInt(0, possibleEnemies.size()-1));
         fightingEnemies.push_back(Enemy(randomEnemy.enemyName, randomEnemy.level, randomEnemy.minHealth, randomEnemy.maxHealth, randomEnemy.armorRating, randomEnemy.equippedWeapon));
     }
 
+    int goldAcquired = fightingEnemies.size() * Functions::randomInt(10, 15) * fightingEnemies[0].level;
     cout << "Zostales zaatakowany !" << endl;
+    system("pause");
+    system("cls");
 
     while (!fightingEnemies.empty() && !haveEscaped) {
         printPlayerInfo();
@@ -148,7 +157,8 @@ void Player::initiateFight() {
     {
         cout<<"Udalo ci sie uciec"<<endl;
     } else {
-        cout<<"Wygrales walke !"<<endl;
+        cout<<"Wygrales walke ! Dostales "<<goldAcquired<<" zlota"<<endl;
+        gold += goldAcquired;
     }
     system("pause");
 }

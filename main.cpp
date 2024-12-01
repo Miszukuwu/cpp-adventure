@@ -87,20 +87,19 @@ void generateShop(){
         boughtItems[i] = false;
         Weapon weapon;
         Armor armor;
-        switch ((rand()%1)+1) {
+        switch (Functions::randomInt(0, 1)) {
         case 0:
         weapon = Weapon::getWeaponsList()[Functions::randomInt(1, Weapon::getWeaponsList().size()-1)];
         items[i] = weapon;
             break;
         case 1:
+        default:
         armor = Armor::getArmorsList()[Functions::randomInt(0, Armor::getArmorsList().size()-1)];
         items[i] = armor;
             break;
-        default:
-            break;
         }
     }
-    int action;
+    char action;
     do{
         system("cls");
         for (int i = 0; i < numberOfItems; i++) {
@@ -115,6 +114,7 @@ void generateShop(){
         do{
             cin.clear();
             cin>>action;
+            action = action - '0';
             if (action > 0 && action < numberOfItems+1){
                 if (player.gold < items[action-1].price) {
                     cout<<"Brak pieniedzy!"<<endl;
@@ -175,17 +175,15 @@ void playerMove(char action) {
     }
     switch (map[playerY][playerX]) {
     case 'O':
-        int randomNumber = (rand()%3)+1;
-        switch (randomNumber) {
+        switch (Functions::randomInt(0, 4)) {
         case 1:
             generateShop();
             break;
         case 2:
         case 3:
         case 4:
-            player.initiateFight();
-            break;
         default:
+            player.initiateFight();
             break;
         } 
         break;

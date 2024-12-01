@@ -9,7 +9,7 @@
 using namespace std;
 
 void Player::printPlayerInfo() {
-    string playerName = "-----===== Gracz =====-----";
+    string playerName = "----------------===== Gracz =====----------------";
     int rowLength = playerName.length();
     cout<<playerName<<endl;
     cout<<level<<" poziom";
@@ -42,13 +42,17 @@ char Player::getUserAction() {
 void Player::attack(vector<Enemy>& fightingEnemies) {
     system("cls");
     int choice;
-    cout<<"Kogo chcesz zaatakowac: "<<endl;
-    for (int i = 0; i < fightingEnemies.size(); i++)
-    {
-        cout<<i+1<<". "<<fightingEnemies[i].enemyName<<endl;
+    if (fightingEnemies.size() > 1) {
+        cout<<"Kogo chcesz zaatakowac: "<<endl;
+        for (int i = 0; i < fightingEnemies.size(); i++)
+        {
+            cout<<i+1<<". "<<fightingEnemies[i].enemyName<<endl;
+        }
+        cin>>choice;
+        choice--;
+    } else {
+        choice = 0;
     }
-    cin>>choice;
-    choice--;
 
     int damage = Functions::randomInt(equipedWeapon.minDamage, equipedWeapon.maxDamage);
     fightingEnemies[choice].health -= (int)(damage * ((100 - (fightingEnemies[choice].armorRating - 10)) / 100));
@@ -197,16 +201,16 @@ void Player::equipItem(Item item){
     Armor armor;
     switch (item.type) {
     case 'w':
-        weapon = Weapon::getWeaponByName(item.name);
-        cout<<"Wyekwipowano "<<item.name<<endl;
-        cout<<"Minimalne obrazenia: "<<weapon.minDamage<<endl;
-        cout<<"Maksymalne obrazenia: "<<weapon.maxDamage<<endl;
+        equipedWeapon = Weapon::getWeaponByName(item.name);
+        cout<<"Wyekwipowano "<<equipedWeapon.name<<endl;
+        cout<<"Minimalne obrazenia: "<<equipedWeapon.minDamage<<endl;
+        cout<<"Maksymalne obrazenia: "<<equipedWeapon.maxDamage<<endl;
         break;
     case 'a':
-        armor = Armor::getArmorByName(item.name);
-        cout<<"Wyekwipowano "<<item.name<<endl;
-        cout<<"Dodatkowe punkty pancerzu: "<<armor.armorBonus<<endl;
-        armorRating = armor.armorBonus;
+        equipedArmor = Armor::getArmorByName(item.name);
+        cout<<"Wyekwipowano "<<equipedArmor.name<<endl;
+        cout<<"Dodatkowe punkty pancerzu: "<<equipedArmor.armorBonus<<endl;
+        armorRating = equipedArmor.armorBonus;
     default:
         break;
     }

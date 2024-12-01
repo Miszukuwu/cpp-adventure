@@ -1,3 +1,10 @@
-clothes;1;10
-leather armor;4;30
-chain mail;10;50
+Szata;10;10
+Skorzana zbroja;20;30
+Kolczuga;30;50
+Zbroja plytowa;40;80
+Pancerz rycerski;50;120
+Zbroja luskowa;35;60
+Pancerz z mithrilu;60;200
+Zbroja demoniczna;70;300
+Pancerz runiczny;80;400
+Zbroja smoczej luski;100;500

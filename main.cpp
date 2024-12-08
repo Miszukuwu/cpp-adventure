@@ -18,6 +18,8 @@ char map[MAP_HEIGHT][MAP_WIDTH];
 int playerX = MAP_WIDTH/2;
 int playerY = MAP_HEIGHT/2;
 
+Player player;
+
 void renderMap() {
 
     // Render tiles from map to renderBuffer
@@ -41,19 +43,19 @@ void renderMap() {
         }
     }
 
-    cout<<"Player X: "<<playerX<<endl;
-    cout<<"Player Y: "<<playerY<<endl;
-    cout<<"Press ESC to exit"<<endl;
-    cout<<"Use W S A D or arrow keys to move"<<endl;
-    for (int i = 0; i < SCREEN_HEIGHT; i++)
-    {
+    cout<<"Wcisnij ESC by wyjsc"<<endl;
+    cout<<"Uzyj W S A D lub strzalek by sie ruszac"<<endl;
+    cout<<"Aby odnowic zycie kliknij 'r'"<<endl;
+    for (int i = 0; i < SCREEN_HEIGHT; i++) {
         string line = "";
-        for (int j = 0; j < SCREEN_WIDTH; j++)
-        {
+        for (int j = 0; j < SCREEN_WIDTH; j++) {
             line += renderBuffer[i][j];
         }
         cout<<line<<endl;
     }
+    cout<<"Punkty Zycia: "<<player.health<<"/"<<player.maxHealth<<endl;
+    cout<<"Obecny armor: "<<player.equipedArmor.name<<", Obecne punkty Pancerza: "<<player.armorRating<<endl;
+    cout<<"Obecna bron: "<<player.equipedWeapon.name<<" "<<player.equipedWeapon.minDamage<<" - "<<player.equipedWeapon.maxDamage<<" obrazen"<<endl;
 }
 char getUserInput() {
     while (true) {
@@ -74,10 +76,72 @@ char getUserInput() {
     // cin>>input;
     // return input;
 }
+void generateShop(){
+    system("cls");
+    cout<<"Znalazles Sklep!"<<endl;
+    system("pause");
+    int numberOfItems = Functions::randomInt(2,5);;
+    Item items[numberOfItems];
+    bool boughtItems[numberOfItems];
+    for (int i = 0; i < numberOfItems; i++) {
+        boughtItems[i] = false;
+        Weapon weapon;
+        Armor armor;
+        switch (Functions::randomInt(0, 1)) {
+        case 0:
+        weapon = Weapon::getWeaponsList()[Functions::randomInt(1, Weapon::getWeaponsList().size()-1)];
+        items[i] = weapon;
+            break;
+        case 1:
+        default:
+        armor = Armor::getArmorsList()[Functions::randomInt(0, Armor::getArmorsList().size()-1)];
+        items[i] = armor;
+            break;
+        }
+    }
+    char action;
+    do{
+        system("cls");
+        for (int i = 0; i < numberOfItems; i++) {
+            if (boughtItems[i]) {
+                cout<<i+1<<". "<<items[i].name<<" - Zakupione"<<endl;
+            } else {
+                cout<<i+1<<". "<<items[i].name<<" - "<<items[i].price<<" sztuk zlota"<<endl;
+            }
+        }
+        cout<<numberOfItems+1<<". Wyjscie"<<endl;
+        cout<<"Obecna ilosc zlota: "<<player.gold<<endl;
+        do{
+            cin.clear();
+            cin>>action;
+            action = action - '0';
+            if (action > 0 && action < numberOfItems+1){
+                if (player.gold < items[action-1].price) {
+                    cout<<"Brak pieniedzy!"<<endl;
+                    continue;
+                }
+                if (boughtItems[action-1]) {
+                    cout<<"Juz kupiles ten przedmiot!"<<endl;
+                    continue;
+                }
+                player.equipItem(items[action-1]);  
+                boughtItems[action-1] = true;
+                player.gold -= items[action-1].price;
+                system("pause");
+                break;
+            } else if (action == numberOfItems+1){
+                return;
+            } else {
+                cout<<"Nie ma takiej opcji!"<<endl;
+            }
+        } while (action != numberOfItems+1);
+    } while (true);
+    
+    
+}
 void playerMove(char action) {
     map[playerY][playerX] = ' ';
-    switch (action)
-    {
+    switch (action) {
     case 'w':
     case 38:
         if (playerY-1 <= 0) {
@@ -101,7 +165,7 @@ void playerMove(char action) {
         break;
     case 'd':
     case 39:
-        if (playerX+1 >= MAP_WIDTH) {
+        if (playerX+1 >= MAP_WIDTH-1) {
             break;
         }
         playerX++;
@@ -109,9 +173,23 @@ void playerMove(char action) {
     default:
         break;
     }
+    switch (map[playerY][playerX]) {
+    case 'O':
+        switch (Functions::randomInt(0, 4)) {
+        case 1:
+            generateShop();
+            break;
+        case 2:
+        case 3:
+        case 4:
+        default:
+            player.initiateFight();
+            break;
+        } 
+        break;
+    }
     map[playerY][playerX] = 219;
 }
-
 void initMap(){
     for (int i = 0; i < MAP_HEIGHT; i++)
     {
@@ -133,13 +211,14 @@ void initMap(){
 }
 
 int main() {
+    Armor::setArmorsList("armors.txt");
     Weapon::setWeaponsList("weapons.txt");
     ReadEnemy::setEnemyList("enemies.txt");
 
+    player = Player();
+
     srand(time(0));
     initMap();
-
-    Player player;
 
     char action;
     while(action != '\e') {
@@ -151,12 +230,10 @@ int main() {
         if (action == 'w' || action == 's' || action == 'a' || action == 'd' || action == 37 || action == 38 || action == 39 || action == 40)
         {
             playerMove(action);
-            Sleep(10);
-        }
-        if  (action == 'F') {
-            player.initiateFight();
+            Sleep(200);
+        } else if(action == 'r') {
+            player.rest();
         }
     }
-
     return 0;
 }

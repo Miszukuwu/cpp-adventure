@@ -9,7 +9,7 @@
 using namespace std;
 
 void Player::printPlayerInfo() {
-    string playerName = "-----===== Gracz =====-----";
+    string playerName = "-----------===== Gracz =====-----------";
     int rowLength = playerName.length();
     cout<<playerName<<endl;
     cout<<level<<" poziom";
@@ -31,27 +31,30 @@ void Player::printPlayerInfo() {
 }
 
 char Player::getUserAction() {
-    char choice;
-    cout<<"Co robisz: "<<endl;
-    cout<<"1. Atak"<<endl;
-    cout<<"2. Ucieczka"<<endl;
+    string choice;
     cin>>choice;
-    return choice;
+    return choice[0];
 }
 
 void Player::attack(vector<Enemy>& fightingEnemies) {
     system("cls");
     int choice;
-    cout<<"Kogo chcesz zaatakowac: "<<endl;
-    for (int i = 0; i < fightingEnemies.size(); i++)
-    {
-        cout<<i+1<<". "<<fightingEnemies[i].enemyName<<endl;
+    if (fightingEnemies.size() > 1) {
+        do {
+            cout<<"Kogo chcesz zaatakowac: "<<endl;
+            for (int i = 0; i < fightingEnemies.size(); i++)
+            {
+                cout<<i+1<<". "<<fightingEnemies[i].enemyName<<endl;
+            }
+            choice = getUserAction() - '0';
+            choice--;
+        } while (choice >= fightingEnemies.size());       
+    } else {
+        choice = 0;
     }
-    cin>>choice;
-    choice--;
 
     int damage = Functions::randomInt(equipedWeapon.minDamage, equipedWeapon.maxDamage);
-    fightingEnemies[choice].health -= damage;
+    fightingEnemies[choice].health -= (int)(damage * ((100 - (fightingEnemies[choice].armorRating - 10)) / 100));
     if (fightingEnemies[choice].health <= 0)
     {
         xp += fightingEnemies[choice].level * 10;
@@ -98,20 +101,32 @@ void Player::initiateFight() {
         }
     }
 
+    if (possibleEnemies.empty())
+    {
+        possibleEnemies = ReadEnemy::getEnemyList();
+    }
+    
+
     for (int i = 0; i < Functions::randomInt(1,3); i++) {
         ReadEnemy randomEnemy = possibleEnemies.at(Functions::randomInt(0, possibleEnemies.size()-1));
         fightingEnemies.push_back(Enemy(randomEnemy.enemyName, randomEnemy.level, randomEnemy.minHealth, randomEnemy.maxHealth, randomEnemy.armorRating, randomEnemy.equippedWeapon));
     }
 
+    int goldAcquired = fightingEnemies.size() * Functions::randomInt(10, 15) * fightingEnemies[0].level;
     cout << "Zostales zaatakowany !" << endl;
+    system("pause");
+    system("cls");
 
-    while (!fightingEnemies.empty() && !haveEscaped) {
+    while (!fightingEnemies.empty() && !haveEscaped && health > 0) {
         printPlayerInfo();
         for (Enemy& enemy : fightingEnemies) {
             enemy.printEnemyInfo();
         }
 
         do {
+            cout<<"Co robisz: "<<endl;
+            cout<<"1. Atak"<<endl;
+            cout<<"2. Ucieczka"<<endl;
             char choice = getUserAction();
             switch (choice) {
                 case '1':
@@ -133,10 +148,15 @@ void Player::initiateFight() {
         {
             for (Enemy enemy : fightingEnemies) {
                 int damage = Functions::randomInt(enemy.equippedWeapon.minDamage, enemy.equippedWeapon.maxDamage);
-                health -= damage;
+                health -= (int)(damage * ((100 - (armorRating - 10)) / 100));
                 cout<<enemy.enemyName<<" zaatakowal cie zadajac "<<damage<<endl;
+                if (health <= 0)
+                {
+                    system("pause");
+                    break;
+                }
             }
-            if (!fightingEnemies.empty())
+            if (!fightingEnemies.empty() && health > 0)
             {
                 system("pause");
             }
@@ -147,8 +167,14 @@ void Player::initiateFight() {
     if (haveEscaped)
     {
         cout<<"Udalo ci sie uciec"<<endl;
+    } else if(health > 0) {
+        cout<<"Wygrales walke ! Dostales "<<goldAcquired<<" zlota"<<endl;
+        gold += goldAcquired;
     } else {
-        cout<<"Wygrales walke !"<<endl;
+        cout<<"Zemdlales. Straciles cale zloto i doswiadczenie"<<endl;
+        gold = 0;
+        xp = 0;
+        health = maxHealth;
     }
     system("pause");
 }
@@ -159,8 +185,35 @@ void Player::checkForLevelUp() {
     {
         xp -= xpToNextLevel;
         level++;
-        maxHealth += level * 3;
+        maxHealth += level * 5;
         cout<<"Zdobyles kolejny poziom ! Masz teraz "<<level<<" poziom"<<endl;
         health = maxHealth;
+    }
+}
+
+void Player::rest() {
+    cout<<"Odpoczales odnawiajac swoje zycie"<<endl;
+    health = maxHealth;
+    system("pause");
+    system("cls");
+}
+
+void Player::equipItem(Item item){
+    Weapon weapon;
+    Armor armor;
+    switch (item.type) {
+    case 'w':
+        equipedWeapon = Weapon::getWeaponByName(item.name);
+        cout<<"Wyekwipowano "<<equipedWeapon.name<<endl;
+        cout<<"Minimalne obrazenia: "<<equipedWeapon.minDamage<<endl;
+        cout<<"Maksymalne obrazenia: "<<equipedWeapon.maxDamage<<endl;
+        break;
+    case 'a':
+        equipedArmor = Armor::getArmorByName(item.name);
+        cout<<"Wyekwipowano "<<equipedArmor.name<<endl;
+        cout<<"Dodatkowe punkty pancerzu: "<<equipedArmor.armorBonus<<endl;
+        armorRating = equipedArmor.armorBonus;
+    default:
+        break;
     }
 }

@@ -1,2 +1,10 @@
-Piesci;1;3
-Zelazny miecz;3;7
+Piesci;1;3;0
+Drewniana maczuga;2;5;10
+Kamienny toporek;3;6;20
+Zelazny miecz;3;7;50
+Stalowy sztylet;4;8;70
+Miecz dwureczny;5;10;100
+Topor bojowy;6;12;120
+Mlot wojenny;7;14;150
+Magiczny miecz;8;16;200
+Smoczy miecz;10;15;300

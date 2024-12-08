@@ -15,6 +15,7 @@ class Player
         int maxHealth;
         int armorRating;
         int xp;
+        int gold;
         list<Item> equipment;
         Weapon equipedWeapon;
         Armor equipedArmor;
@@ -23,15 +24,11 @@ class Player
         level = 1;
         health = 20;
         maxHealth = 20;
-        armorRating = 10;
         xp = 0;
-        for (Weapon weapon : Weapon::getWeaponsList())
-        {
-            if (weapon.name == "Piesci")
-            {
-                equipedWeapon = weapon;
-            }
-        }
+        gold = 0;
+        equipedWeapon = Weapon::getWeaponByName("Piesci");
+        equipedArmor = Armor::getArmorByName("Szata");
+        armorRating = equipedArmor.armorBonus;
     }
 
     public:
@@ -39,6 +36,8 @@ class Player
     char getUserAction();
     void initiateFight();
     void checkForLevelUp();
+    void rest();
     void attack(vector<Enemy>& fightingEnemies);
     bool escape(vector<Enemy>& fightingEnemies);
+    void equipItem(Item item);
 };
